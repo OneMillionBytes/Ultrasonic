@@ -36,7 +36,7 @@
 #include "stm32f1xx_hal.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+extern volatile uint8_t _ui8Connected;
 /* USER CODE END INCLUDE */
 
 /** @addtogroup USBD_OTG_DRIVER

@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.14)
     SET(COMMON_FLAGS "
         -mcpu=cortex-m3 \
         -mthumb \
-        -mthumb-interwork \
+        -mthumbnterwork \
         -ffunction-sections \
         -fdata-sections \
         -g \
@@ -69,7 +69,30 @@ cmake_minimum_required(VERSION 3.14)
     Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c 
     Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c 
     Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c 
-    Src/system_stm32f1xx.c
+    Src/system_stm32f1xx.c 
+    Src/freertos.c 
+    Src/usb_device.c 
+    Src/usbd_conf.c 
+    Src/usbd_desc.c 
+    Src/usbd_cdc_if.c 
+    Src/stm32f1xx_hal_timebase_tim.c 
+    Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c 
+    Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c 
+    Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c 
+    Middlewares/Third_Party/FreeRTOS/Source/croutine.c 
+    Middlewares/Third_Party/FreeRTOS/Source/event_groups.c 
+    Middlewares/Third_Party/FreeRTOS/Source/list.c 
+    Middlewares/Third_Party/FreeRTOS/Source/queue.c 
+    Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c 
+    Middlewares/Third_Party/FreeRTOS/Source/tasks.c 
+    Middlewares/Third_Party/FreeRTOS/Source/timers.c 
+    Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c 
+    Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c 
+    Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c 
+    Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c 
+    Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c 
+    Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c 
+    Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
 )
 
     include_directories(
@@ -77,8 +100,13 @@ cmake_minimum_required(VERSION 3.14)
     Drivers/STM32F1xx_HAL_Driver/Inc 
     Drivers/STM32F1xx_HAL_Driver/Inc/Legacy 
     Drivers/CMSIS/Device/ST/STM32F1xx/Include 
-    Drivers/CMSIS/Include
-    Drivers/CMSIS/Include
+    Drivers/CMSIS/Include 
+    Drivers/CMSIS/Include 
+    Middlewares/Third_Party/FreeRTOS/Source/include 
+    Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 
+    Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 
+    Middlewares/ST/STM32_USB_Device_Library/Core/Inc 
+    Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
             )
 
     add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})

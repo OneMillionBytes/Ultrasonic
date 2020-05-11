@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -159,20 +159,8 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  HAL_TIM_IC_Start_IT(&htim1, 0);
-
-
   while (1)
   {
-      HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
-      HAL_Delay(2);
-      HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
-
-      while(_ui8Sync == 0);
-
-      _ui8Sync = 0;
-
-      HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -377,7 +365,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+char _data[24];
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -393,10 +381,23 @@ void StartDefaultTask(void *argument)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+    HAL_TIM_IC_Start_IT(&htim1, 0);
+
+
+    for (;;) {
+        HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
+        osDelay(2);
+        HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+
+        while (_ui8Sync == 0);
+
+        _ui8Sync = 0;
+        if(_ui8Connected) {
+            snprintf(_data, sizeof(_data), "%f\n", _Distance);
+            CDC_Transmit_FS(_data, 3);
+        }
+        osDelay(10);
+    }
   /* USER CODE END 5 */ 
 }
 

@@ -43,7 +43,7 @@ PCD_HandleTypeDef hpcd_USB_FS;
 void Error_Handler(void);
 
 /* USER CODE BEGIN 0 */
-
+volatile uint8_t _ui8Connected = 0;
 /* USER CODE END 0 */
 
 /* USER CODE BEGIN PFP */
@@ -271,6 +271,7 @@ void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   USBD_LL_DevConnected((USBD_HandleTypeDef*)hpcd->pData);
+    _ui8Connected = 1;
 }
 
 /**
@@ -285,6 +286,7 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
+    _ui8Connected = 0;
 }
 
 /*******************************************************************************
