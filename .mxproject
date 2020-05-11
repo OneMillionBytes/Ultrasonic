@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=/Users/ctemail/Documents/Projekte/UltrasonicSensor.git/Inc
+HeaderPath=/Users/ctemail/Documents/gitProjects/UltrasonicSensor/Inc
 HeaderFiles=stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=/Users/ctemail/Documents/Projekte/UltrasonicSensor.git/Src
+SourcePath=/Users/ctemail/Documents/gitProjects/UltrasonicSensor/Src
 SourceFiles=stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
