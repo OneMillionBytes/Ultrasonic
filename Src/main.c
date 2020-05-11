@@ -57,7 +57,17 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+volatile uint8_t _ui8Sync = 0;
+volatile uint32_t _ui32Time = 0;
+uint32_t _values[100];
+uint8_t _cnt = 0;
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+    _ui32Time = htim->Instance->CCR1;
+    if(100 > _cnt) {
+        _values[_cnt++] = _ui32Time;
+    }
+    _ui8Sync = 1;
+}
 /* USER CODE END 0 */
 
 /**
@@ -95,8 +105,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  HAL_TIM_IC_Start_IT(&htim1, 0);
+
+
   while (1)
   {
+      HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
+      HAL_Delay(2);
+      HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+
+      while(_ui8Sync == 0);
+
+      _ui8Sync = 0;
+
+      HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -159,7 +182,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
+  htim1.Init.Prescaler = 80;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 65535;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -179,8 +202,8 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_TI1FP1;
-  sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+  sSlaveConfig.InputTrigger = TIM_TS_TI1F_ED;
+  sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sSlaveConfig.TriggerFilter = 0;
   if (HAL_TIM_SlaveConfigSynchro(&htim1, &sSlaveConfig) != HAL_OK)
   {
@@ -219,7 +242,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : TRIG_Pin */
   GPIO_InitStruct.Pin = TRIG_Pin;
