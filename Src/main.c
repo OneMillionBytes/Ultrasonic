@@ -418,7 +418,7 @@ void StartDefaultTask(void *argument)
         while (_ui8Sync == 0);
 
         _ui8Sync = 0;
-        if(1) {
+        if(hUsbDeviceFS.dev_config) {
             uint8_t len = snprintf(_data, 24, "%.4f\n", _Distance);
             CDC_Transmit_FS(_data, len);
         }
