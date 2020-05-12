@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -81,13 +82,26 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
         _values[_cnt++] = _ui32Time;
     }
     _ui8Sync = 1;
-    _Distance = ((float)_ui32Time/2)*(float)343/100000;
+    _Distance = (((float)_ui32Time/2)*(float)343)/1000000;
 
     if(_Distance < 0.5) {
         HAL_TIM_PWM_Start(&htim2, 0);
     } else {
         HAL_TIM_PWM_Stop(&htim2, 0);
     }
+}
+
+void InitUSB() {
+    //		  /* init code for USB_DEVICE */
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_12;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
+    HAL_Delay(500);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET);
 }
 /* USER CODE END 0 */
 
@@ -351,9 +365,20 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(USB_PULL_GPIO_Port, USB_PULL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : USB_PULL_Pin */
+  GPIO_InitStruct.Pin = USB_PULL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(USB_PULL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : TRIG_Pin */
   GPIO_InitStruct.Pin = TRIG_Pin;
@@ -366,6 +391,19 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 char _data[24];
+
+void USBInit() {
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_11;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+    HAL_Delay(500);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
+    HAL_Delay(500);
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -378,6 +416,7 @@ char _data[24];
 void StartDefaultTask(void *argument)
 {
   /* init code for USB_DEVICE */
+    USBInit();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -386,17 +425,18 @@ void StartDefaultTask(void *argument)
 
     for (;;) {
         HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
-        osDelay(2);
+        osDelay(20);
         HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
 
         while (_ui8Sync == 0);
 
         _ui8Sync = 0;
-        if(_ui8Connected) {
-            snprintf(_data, sizeof(_data), "%f\n", _Distance);
-            CDC_Transmit_FS(_data, 3);
+        if(1) {
+            uint8_t len = snprintf(_data, 24, "%.4f\n", _Distance);
+            CDC_Transmit_FS(_data, len);
         }
-        osDelay(10);
+        // -mthumbnterwork
+        osDelay(200);
     }
   /* USER CODE END 5 */ 
 }

@@ -22,7 +22,6 @@ cmake_minimum_required(VERSION 3.14)
     SET(COMMON_FLAGS "
         -mcpu=cortex-m3 \
         -mthumb \
-        -mthumbnterwork \
         -ffunction-sections \
         -fdata-sections \
         -g \
@@ -44,7 +43,7 @@ cmake_minimum_required(VERSION 3.14)
 
     SET(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS} -std=gnu99")
 
-    SET(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
+    SET(CMAKE_EXE_LINKER_FLAGS_INIT "-u _printf_float -Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
 
     PROJECT(UltrasonicSensor C CXX ASM)
     set(CMAKE_CXX_STANDARD 11)

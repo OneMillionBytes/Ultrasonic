@@ -62,7 +62,7 @@
   */
 
 /* USER CODE BEGIN EXPORTED_TYPES */
-
+extern volatile uint8_t _connected;
 /* USER CODE END EXPORTED_TYPES */
 
 /**
