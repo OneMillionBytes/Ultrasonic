@@ -73,14 +73,9 @@ void StartDefaultTask(void *argument);
 /* USER CODE BEGIN 0 */
 volatile uint8_t _ui8Sync = 0;
 volatile uint32_t _ui32Time = 0;
-uint32_t _values[100];
-uint8_t _cnt = 0;
 float _Distance = 0;
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
     _ui32Time = htim->Instance->CCR1;
-    if(100 > _cnt) {
-        _values[_cnt++] = _ui32Time;
-    }
     _ui8Sync = 1;
     _Distance = (((float)_ui32Time/2)*(float)343)/1000000;
 
