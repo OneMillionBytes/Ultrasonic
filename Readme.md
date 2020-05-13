@@ -9,7 +9,7 @@
 
 ## How does it work?
 ### Starting the tigger
-The HC-SR04 starts in response to a falling edge whose has to be HIGH for at least 10µs.
+The HC-SR04 starts in response to a falling edge which has to be HIGH for at least 10µs.
 ```C
 HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
 osDelay(20);
@@ -59,3 +59,6 @@ osDelay(200);
 ![Timer](IMG_9BF43DF46D18-1.jpeg)
 
 PA8 is connected to TIMx_CH1. The edge detector is connected to TRGI using the TIF_ED signal (*1), which resets the counter upon a rising edge. A falling edge on TI1FP1 then captures the timer value (*2).
+
+### Wiring diagram
+![Timer](UltrasonicSketch.jpg)

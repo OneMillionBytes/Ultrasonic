@@ -71,19 +71,21 @@ void StartDefaultTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// ticks per second calculated by (system clock / prescaler)
+static const uint32_t _ui32TicksPerSecond = 1000000;
+static const uint32_t _ui32SpeedinMeterPerSecond = 343;
+
 volatile uint8_t _ui8Sync = 0;
-volatile uint32_t _ui32Time = 0;
 float _Distance = 0;
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-    _ui32Time = htim->Instance->CCR1;
-    _ui8Sync = 1;
-    _Distance = (((float)_ui32Time/2)*(float)343)/1000000;
+    // Get timer value
+    uint32_t _ui32Time = htim->Instance->CCR1;
 
-    if(_Distance < 0.5) {
-        HAL_TIM_PWM_Start(&htim2, 0);
-    } else {
-        HAL_TIM_PWM_Stop(&htim2, 0);
-    }
+    // Calculate distance using physics and math
+    _Distance = ((_ui32Time/2.f)*_ui32SpeedinMeterPerSecond)/_ui32TicksPerSecond;
+
+    // Set flag
+    _ui8Sync = 1;
 }
 
 /* USER CODE END 0 */
@@ -417,7 +419,13 @@ void StartDefaultTask(void *argument)
             uint8_t len = snprintf(_data, 24, "%.4f\n", _Distance);
             CDC_Transmit_FS(_data, len);
         }
-        // -mthumbnterwork
+
+        // Set alarm
+        if(_Distance < 0.5) {
+            HAL_TIM_PWM_Start(&htim2, 0);
+        } else {
+            HAL_TIM_PWM_Stop(&htim2, 0);
+        }
         osDelay(200);
     }
   /* USER CODE END 5 */ 
