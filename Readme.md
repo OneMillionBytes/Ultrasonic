@@ -52,6 +52,7 @@ osDelay(200);
 ### Pin Definition
 |Pin      | Function         |
 |---|---|
+|PA0|Distance warning output connected to a piezo summer. If the distance is below a certain value an alarm is activated.
 |PA8|Echo, connected to the capture compare unit|
 |PA9|Trigger, triggers new measurement|
 
