@@ -54,3 +54,7 @@ osDelay(200);
 |---|---|
 |PA8|Echo, connected to the capture compare unit|
 |PA9|Trigger, triggers new measurement|
+
+![Timer](IMG_9BF43DF46D18-1.jpeg)
+
+PA8 is connected to TIMx_CH1. The edge detector is connected to TRGI using the TIF_ED signal (*1), which resets the counter upon a rising edge. A falling edge on TI1FP1 then captures the timer value (*2).
