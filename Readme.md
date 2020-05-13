@@ -49,3 +49,8 @@ if(hUsbDeviceFS.dev_config) {
 
 osDelay(200);
 ```
+### Pin Definition
+|Pin      | Function         |
+|---|---|
+|PA8|Echo, connected to the capture compare unit|
+|PA9|Trigger, triggers new measurement|
