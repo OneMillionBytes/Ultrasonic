@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/UltrasonicSensor.git.iml" filepath="$PROJECT_DIR$/.idea/UltrasonicSensor.git.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/UltrasonicSensor.iml" filepath="$PROJECT_DIR$/.idea/UltrasonicSensor.iml" />
     </modules>
   </component>
 </project>
