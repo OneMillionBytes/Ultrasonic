@@ -12,30 +12,21 @@ This is yet another ultrasonic sensor project. What it makes interesting is that
 ### Starting the tigger and waiting for an echo
 The HC-SR04 starts in response to a falling edge which has to be HIGH for at least 10µs.
 ```C
-for (;;) {
-    // trigger a measurement
-    HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
-    osDelay(20);
-    HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+    for (;;) {
+        HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
+        osDelay(20);
+        HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
 
-    // wait for capture interrupt to be processed
-    while (_ui8Sync == 0);
-    _ui8Sync = 0;
+        while (_ui8Sync == 0);
 
-    // Send data to virtual COM Port
-    if(hUsbDeviceFS.dev_config) {
-        uint8_t len = snprintf(_data, 24, "%.4f\n", _Distance);
-        CDC_Transmit_FS(_data, len);
+        _ui8Sync = 0;
+        // Send data over USB
+        if(hUsbDeviceFS.dev_config) {
+            uint8_t len = snprintf(_data, 24, "%.4f\n", _Distance);
+            CDC_Transmit_FS(_data, len);
+        }
+        osDelay(20);
     }
-
-    // Set alarm
-    if(_Distance < 0.5) {
-        HAL_TIM_PWM_Start(&htim2, 0);
-    } else {
-        HAL_TIM_PWM_Stop(&htim2, 0);
-    }
-    osDelay(200);
-}
 ```
 ### Processing the capture interrupt
 The capture callback converts the timer value to an actual distance.
@@ -64,7 +55,6 @@ PA8 is connected to TIMx_CH1. The edge detector is connected to TRGI using the T
 ### Wiring diagram
 |Pin      | Function         |
 |---|---|
-|PA0|Distance warning output connected to a piezo summer. If the distance is below a certain value an alarm is activated.
 |PA8|Echo, connected to the capture compare unit|
 |PA9|Trigger, triggers new measurement|
 
