@@ -52,7 +52,7 @@ cmake_minimum_required(VERSION 3.14)
 
     SET(SOURCES
             startup_stm32f103xb.s
-            Src/main.c 
+            Src/main.cpp
     Src/stm32f1xx_it.c 
     Src/stm32f1xx_hal_msp.c 
     Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c 

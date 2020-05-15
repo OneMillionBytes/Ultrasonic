@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=/Users/ctemail/Documents/gitProjects/UltrasonicSensor/Inc
+HeaderPath=/Users/ctemail/Documents/Projekte/UltrasonicSensor/Inc
 HeaderFiles=stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;FreeRTOSConfig.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;
-SourcePath=/Users/ctemail/Documents/gitProjects/UltrasonicSensor/Src
+SourcePath=/Users/ctemail/Documents/Projekte/UltrasonicSensor/Src
 SourceFiles=stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;freertos.c;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;stm32f1xx_hal_timebase_tim.c;
 
 [PreviousLibFiles]
