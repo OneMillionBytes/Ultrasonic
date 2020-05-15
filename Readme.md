@@ -31,17 +31,19 @@ The HC-SR04 starts in response to a falling edge which has to be HIGH for at lea
 ### Processing the capture interrupt
 The capture callback converts the timer value to an actual distance.
 ```C
-static const uint32_t _ui32TicksPerSecond = 1000000;
-static const uint32_t _ui32SpeedinMeterPerSecond = 343;
+// ticks per second calculated by (system clock / prescaler)
+constexpr uint32_t _ui32TicksPerSecond = 1000000;
+constexpr uint32_t _ui32SpeedinMeterPerSecond = 343;
+constexpr float _fFactor = (float)_ui32SpeedinMeterPerSecond / _ui32TicksPerSecond;
 
 volatile uint8_t _ui8Sync = 0;
-float _Distance = 0;
+volatile float _Distance = 0;
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
     // Get timer value
     uint32_t _ui32Time = htim->Instance->CCR1;
 
     // Calculate distance using physics and math
-    _Distance = ((_ui32Time/2.f)*_ui32SpeedinMeterPerSecond)/_ui32TicksPerSecond;
+    _Distance = (_ui32Time/2.f)*_fFactor;
 
     // Set flag
     _ui8Sync = 1;
